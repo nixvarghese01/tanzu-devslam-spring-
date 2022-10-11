@@ -45,16 +45,16 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<docker>
-						<publishRegistry>
-							<username>${env.DOCKER_PUBLISH_USERNAME}</username>
-							<password>${env.DOCKER_PUBLISH_PASSWORD}</password>
-						</publishRegistry>
-					</docker>
-				</configuration>
+    				<groupId>org.springframework.boot</groupId>
+    				<artifactId>spring-boot-maven-plugin</artifactId>
+   				<configuration>
+        				<docker>
+            					<publishRegistry>
+               						 <username>${env.DOCKER_PUBLISH_USERNAME}</username>
+                					 <password>${env.DOCKER_PUBLISH_PASSWORD}</password>
+            					</publishRegistry>
+        				</docker>
+    				</configuration>
 			</plugin>
 
 		</plugins>
