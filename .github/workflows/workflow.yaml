@@ -28,7 +28,9 @@ jobs:
         java-version: ${{ env.JAVA_VERSION }}
         cache: maven
     - name: Test app
-      run: cd app && ./mvnw -B test
+      run: | 
+            chmod -R 777 /app
+            cd app && ./mvnw -B test
 
   deploy-image:
     needs:
