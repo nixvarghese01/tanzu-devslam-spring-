@@ -3,7 +3,7 @@ name: Build and deploy
 on:
   push:
     branches:
-    - main
+    - master
 
 # Limit concurrent workflow execution to 1.
 # Running jobs will be canceled in case a new workflow is started.
@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  APP_IMAGE: ghcr.io/${{ github.repository_owner }}/tanzu-devslam-spring:${{ github.run_number }}
+  APP_IMAGE: ghcr.io/${{ github.nixvarghese01}}/tanzu-devslam-spring:${{ github.run_number }}
   JAVA_VERSION: 17
 
 jobs:
