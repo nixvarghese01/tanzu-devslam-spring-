@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tanzu-devslam-spring
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+  namespace: tanzu-devslam-spring
+data:
+  # Override Spring configuration properties with a Kubernetes ConfigMap.
+  # Make sure you restart pods when you edit the ConfigMap content.
+  app.message: Hello Devslam!
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  namespace: tanzu-devslam-spring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: app
+  template:
+    metadata:
+      labels:
+        tier: app
+      annotations:
+        # Enable Prometheus support: the Spring Boot app automatically exposes metrics.
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port:  "8080"
+    spec:
+      containers:
+      - name: app
+        # FIXME: update the image name with its tag.
+        image: ghcr.io/GH_USER/tanzu-devslam-spring:1
+        resources:
+          limits:
+            memory: 1Gi
+        # Spring Boot provides health probes that you can use with Kubernetes:
+        # this instance will not receive incoming traffic until the pod is up and running.
+        livenessProbe:
+          httpGet:
+            port: 8080
+            path: /actuator/health/liveness
+        readinessProbe:
+          httpGet:
+            port: 8080
+            path: /actuator/health/readiness
+        env:
+        # Read the ConfigMap mounted as a volume under /etc/config.
+        - name: SPRING_CONFIG_IMPORT
+          value: configtree:/etc/config/
+        volumeMounts:
+       # Mount the ConfigMap as a volume in the pod.
+        - mountPath: /etc/config
+          name: config
+      volumes:
+      - name: config
+        configMap:
+          name: config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+  namespace: tanzu-devslam-spring
+spec:
+  # The app is available as a cluster-wide service, but you cannot access it from outside.
+  # Use this command to open a connection to this service, and hit http://localhost:8080
+  # to see the app in action:
+  # $ kubectl -n tanzu-devslam-spring port-forward svc/app 8080:8080
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    # Target pods in the same namespace having a label tier=app.
+    tier: app
