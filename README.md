@@ -1,7 +1,10 @@
+# tanzu-devslam-spring: Spring Boot on Kubernetes (Tanzu)
 
-# Build and Run The Demo App
+A Spring Boot 2.7 / Java 17 demo app (actuator and Prometheus) that GitHub Actions builds into a container image with Cloud Native Buildpacks, publishes to GitHub Container Registry and deploys to Tanzu Community Edition.
+
+## Build and Run The Demo App
 ## Build Application and Push Image 
-1. [Fork](https://github.com/MoSehsah/tanzu-devslam-spring/fork) this repo to your personal account
+1. Fork this repo to your personal account (based on [MoSehsah/tanzu-devslam-spring](https://github.com/MoSehsah/tanzu-devslam-spring))
 2. Follow instructions [here](app/README.md) to build your application
 3. Commit and Push this change to Github
 4. Check Github Actions to check the status of the build and push
@@ -12,7 +15,7 @@
 1. Update **GH_USER** and *image tag* in file `k8s/app.yaml` ***line 39*** with your github username and the lastest workflow run number
 2. Run the following commands
     ```
-    kubectl apply -f yaml/deploy/demo-app.yaml
+    kubectl apply -f k8s/app.yaml
     kubectl port-forward svc/app 8080:8080 -n tanzu-devslam-spring
     ```
 3. Check your application http://localhost:8080
