@@ -3,7 +3,7 @@ name: Build and deploy
 on:
   push:
     branches:
-    - master
+    - main
 
 # Limit concurrent workflow execution to 1.
 # Running jobs will be canceled in case a new workflow is started.
